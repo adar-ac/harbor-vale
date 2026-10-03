@@ -1,0 +1,145 @@
+{
+  "gender": {
+    "dtype": "str",
+    "allowed": [
+      "Female",
+      "Male"
+    ]
+  },
+  "SeniorCitizen": {
+    "dtype": "int64",
+    "min": 0.0,
+    "max": 1.0
+  },
+  "Partner": {
+    "dtype": "str",
+    "allowed": [
+      "No",
+      "Yes"
+    ]
+  },
+  "Dependents": {
+    "dtype": "str",
+    "allowed": [
+      "No",
+      "Yes"
+    ]
+  },
+  "tenure": {
+    "dtype": "int64",
+    "min": 1.0,
+    "max": 72.0
+  },
+  "PhoneService": {
+    "dtype": "str",
+    "allowed": [
+      "No",
+      "Yes"
+    ]
+  },
+  "MultipleLines": {
+    "dtype": "str",
+    "allowed": [
+      "No",
+      "No phone service",
+      "Yes"
+    ]
+  },
+  "InternetService": {
+    "dtype": "str",
+    "allowed": [
+      "DSL",
+      "Fiber optic",
+      "No"
+    ]
+  },
+  "OnlineSecurity": {
+    "dtype": "str",
+    "allowed": [
+      "No",
+      "No internet service",
+      "Yes"
+    ]
+  },
+  "OnlineBackup": {
+    "dtype": "str",
+    "allowed": [
+      "No",
+      "No internet service",
+      "Yes"
+    ]
+  },
+  "DeviceProtection": {
+    "dtype": "str",
+    "allowed": [
+      "No",
+      "No internet service",
+      "Yes"
+    ]
+  },
+  "TechSupport": {
+    "dtype": "str",
+    "allowed": [
+      "No",
+      "No internet service",
+      "Yes"
+    ]
+  },
+  "StreamingTV": {
+    "dtype": "str",
+    "allowed": [
+      "No",
+      "No internet service",
+      "Yes"
+    ]
+  },
+  "StreamingMovies": {
+    "dtype": "str",
+    "allowed": [
+      "No",
+      "No internet service",
+      "Yes"
+    ]
+  },
+  "Contract": {
+    "dtype": "str",
+    "allowed": [
+      "Month-to-month",
+      "One year",
+      "Two year"
+    ]
+  },
+  "PaperlessBilling": {
+    "dtype": "str",
+    "allowed": [
+      "No",
+      "Yes"
+    ]
+  },
+  "PaymentMethod": {
+    "dtype": "str",
+    "allowed": [
+      "Bank transfer (automatic)",
+      "Credit card (automatic)",
+      "Electronic check",
+      "Mailed check"
+    ]
+  },
+  "MonthlyCharges": {
+    "dtype": "float64",
+    "min": 18.25,
+    "max": 118.75
+  },
+  "TotalCharges": {
+    "dtype": "float64",
+    "min": 18.8,
+    "max": 8684.8
+  },
+  "Churn": {
+    "dtype": "str",
+    "allowed": [
+      "No",
+      "Yes"
+    ]
+  }
+}
