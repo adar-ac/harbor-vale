@@ -1,0 +1,13 @@
+{
+  "status": "placeholder",
+  "model": null,
+  "trained_on": "clean.csv",
+  "contract_version": "1.0",
+  "target_column": "Churn",
+  "rows_seen": 6,
+  "target_distribution": {
+    "No": 3,
+    "Yes": 3
+  },
+  "metrics": {}
+}

@@ -1,0 +1,84 @@
+{
+  "contract_version": "1.0",
+  "dataset": "telco_customer_churn",
+  "produced_by": "crew1_analyst_stub",
+  "data_file": "clean.csv",
+  "target_column": "Churn",
+  "row_count": {
+    "expected": 6,
+    "tolerance_pct": 0.0
+  },
+  "columns": {
+    "customerID": {
+      "dtype": "string",
+      "kind": "identifier",
+      "nullable": false
+    },
+    "gender": {
+      "dtype": "string",
+      "kind": "categorical",
+      "allowed_values": [
+        "Female",
+        "Male"
+      ]
+    },
+    "SeniorCitizen": {
+      "dtype": "int",
+      "kind": "categorical",
+      "allowed_values": [
+        0,
+        1
+      ]
+    },
+    "tenure": {
+      "dtype": "int",
+      "kind": "numeric",
+      "min": 1,
+      "max": 72,
+      "unit": "months"
+    },
+    "Contract": {
+      "dtype": "string",
+      "kind": "categorical",
+      "allowed_values": [
+        "Month-to-month",
+        "One year",
+        "Two year"
+      ]
+    },
+    "PaymentMethod": {
+      "dtype": "string",
+      "kind": "categorical",
+      "allowed_values": [
+        "Bank transfer (automatic)",
+        "Credit card (automatic)",
+        "Electronic check",
+        "Mailed check"
+      ]
+    },
+    "MonthlyCharges": {
+      "dtype": "float",
+      "kind": "numeric",
+      "monetary": true,
+      "unit": "USD",
+      "min": 18.25,
+      "max": 118.75
+    },
+    "TotalCharges": {
+      "dtype": "float",
+      "kind": "numeric",
+      "monetary": true,
+      "unit": "USD",
+      "min": 18.8,
+      "max": 8684.8
+    },
+    "Churn": {
+      "dtype": "string",
+      "kind": "categorical",
+      "allowed_values": [
+        "No",
+        "Yes"
+      ]
+    }
+  }
+}
