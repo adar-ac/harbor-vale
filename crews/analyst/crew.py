@@ -5,7 +5,7 @@ run inside deterministic tools (crews/analyst/tools.py); the agents call those t
 and write only the narrative outputs (insights.md, eda_report.html). The tools are
 bound to fixed paths and take no arguments, so an agent can't point them elsewhere.
 
-stub.py is kept as an offline fallback (see flows/main_flow.py).
+dryrun.py and stub.py are offline fallbacks (see flows/main_flow.py).
 """
 
 from __future__ import annotations
@@ -20,6 +20,7 @@ from dotenv import load_dotenv
 load_dotenv()  # GEMINI_API_KEY, CREWAI_TRACING_ENABLED, ... before crewai reads them
 
 from crewai import LLM, Agent, Crew, Process, Task  # noqa: E402
+from crewai.llms.retry import run_with_rate_limit_retry  # noqa: E402
 from crewai.tools import tool  # noqa: E402
 
 from crews.analyst import tools as T  # noqa: E402
@@ -177,6 +178,7 @@ def build_crew(out_dir: Path, raw_path: Path = RAW_PATH) -> tuple[Crew, dict[str
         tasks=list(tasks.values()),
         process=Process.sequential,
         verbose=True,
+        max_rpm=4,
     )
     return crew, tasks
 
@@ -197,7 +199,7 @@ def run(out_dir: Path) -> dict[str, Path]:
         p.unlink(missing_ok=True)
 
     crew, tasks = build_crew(out_dir)
-    crew.kickoff()
+    run_with_rate_limit_retry(crew.kickoff)
 
     for key in ("data", "contract"):
         if not paths[key].exists():

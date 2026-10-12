@@ -21,8 +21,10 @@ load_dotenv()
 
 from crewai.flow.flow import Flow, listen, start  # noqa: E402
 
-# Set ANALYST_STUB=1 to run the old hardcoded analyst (no LLM calls).
-if os.getenv("ANALYST_STUB") == "1":
+# ANALYST_DRYRUN=1: real tools + artifacts, no LLM. ANALYST_STUB=1: tiny hardcoded sample.
+if os.getenv("ANALYST_DRYRUN") == "1":
+    from crews.analyst import dryrun as analyst
+elif os.getenv("ANALYST_STUB") == "1":
     from crews.analyst import stub as analyst
 else:
     from crews.analyst import crew as analyst

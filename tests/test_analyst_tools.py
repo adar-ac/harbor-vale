@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from crews.analyst import tools as T
+from crews.analyst import dryrun, tools as T
 from validation.contract_check import gate
 
 RAW = Path(__file__).resolve().parents[1] / "data" / "raw" / "telco.csv"
@@ -32,3 +32,10 @@ def test_clean_and_contract_pass_gate(tmp_path):
     for money in ("MonthlyCharges", "TotalCharges"):
         assert cols[money]["monetary"] is True and cols[money]["unit"] == "USD"
     assert cols["TotalCharges"]["dtype"] == "float"
+
+
+def test_dryrun_writes_artifacts_and_passes_gate(tmp_path):
+    paths = dryrun.run(tmp_path)
+    gate(paths["data"], paths["contract"])
+    assert paths["insights"].is_file()
+    assert paths["eda_report"].read_text(encoding="utf-8").startswith("<!DOCTYPE html>")
