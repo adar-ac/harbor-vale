@@ -12,12 +12,21 @@ Run from the project root:  python -m flows.main_flow
 from __future__ import annotations
 
 import logging
+import os
 from pathlib import Path
 
-from crewai.flow.flow import Flow, listen, start
+from dotenv import load_dotenv
 
-from crews.analyst import stub as analyst
-from crews.scientist import stub as scientist
+load_dotenv()
+
+from crewai.flow.flow import Flow, listen, start  # noqa: E402
+
+# Set ANALYST_STUB=1 to run the old hardcoded analyst (no LLM calls).
+if os.getenv("ANALYST_STUB") == "1":
+    from crews.analyst import stub as analyst
+else:
+    from crews.analyst import crew as analyst
+from crews.scientist import stub as scientist  # noqa: E402
 from validation.contract_check import validate
 from validation.exceptions import ContractViolation
 
@@ -31,7 +40,7 @@ log = logging.getLogger("pipeline")
 class ChurnPipelineFlow(Flow):
     @start()
     def run_analyst(self) -> dict[str, Path]:
-        log.info("step 1/3: analyst stub -> %s", CREW1_DIR)
+        log.info("step 1/3: analyst (%s) -> %s", analyst.__name__, CREW1_DIR)
         artifacts = analyst.run(CREW1_DIR)
         log.info("analyst wrote %s and %s", artifacts["data"].name, artifacts["contract"].name)
         return artifacts

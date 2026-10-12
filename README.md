@@ -14,19 +14,22 @@ data/raw/telco.csv
  Crew 2: scientist (reads ONLY clean.csv + contract) ──► artifacts/crew2/model_report.json
 ```
 
-**Status: skeleton only.** Both crews are stub functions that write hardcoded
-placeholder artifacts. There are no Agents, Tasks, or LLM calls anywhere.
+**Status:** Crew 1 is a real CrewAI crew on Gemini (`gemini/gemini-3.8-flash` by default; set `MODEL` to change it).
+Crew 2 is still a stub. Set `ANALYST_STUB=1` to run the old hardcoded analyst with no LLM calls.
 
 ## Layout
 
 | Path | Purpose |
 |---|---|
 | `flows/main_flow.py` | CrewAI Flow: `@start` analyst → `@listen` gate → `@listen` scientist |
-| `crews/analyst/stub.py` | Crew 1 placeholder: writes `clean.csv` + `dataset_contract.json` |
+| `crews/analyst/crew.py` | Crew 1: Profiler, Cleaner, and Contract Author agents. They call tools and write `insights.md` + `eda_report.html` |
+| `crews/analyst/tools.py` | Deterministic pandas code for profiling, cleaning, the contract, and EDA stats. All contract numbers come from here |
+| `crews/analyst/stub.py` | Crew 1 offline fallback (hardcoded 6 rows) |
 | `crews/scientist/stub.py` | Crew 2 placeholder: reads the handoff, writes `model_report.json` |
 | `validation/contract_check.py` | `validate(data_path, contract_path)` returns all violations; `gate()` raises |
 | `validation/exceptions.py` | `Violation`, `ContractViolation` |
 | `tests/test_gate.py` | Clean data passes; `MonthlyCharges` × 100 (cents) is blocked |
+| `tests/test_analyst_tools.py` | Real cleaning + contract on `telco.csv` (7032 rows) passes the gate |
 
 ## Setup (Windows, Python 3.12)
 
@@ -35,8 +38,8 @@ crewai 1.15.23 requires Python `>=3.10,<3.14`. It will not install on 3.14.
 ```powershell
 py -3.12 -m venv .venv
 .venv\Scripts\Activate.ps1
-pip install "crewai==1.15.23" pandas pytest
-copy .env.example .env   # optional for now; the stubs don't call any LLM
+pip install -r requirements.txt   # includes crewai[google-genai] for the native Gemini provider
+copy .env.example .env            # then set GEMINI_API_KEY
 ```
 
 ## Verify

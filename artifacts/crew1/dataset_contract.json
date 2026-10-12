@@ -1,7 +1,7 @@
 {
-  "contract_version": "1.1",
+  "contract_version": "1.0",
   "dataset": "telco_customer_churn",
-  "produced_by": "manual_survey",
+  "produced_by": "crew1_analyst",
   "data_file": "clean.csv",
   "target_column": "Churn",
   "row_count": {
@@ -9,23 +9,163 @@
     "tolerance_pct": 0.0
   },
   "columns": {
-    "customerID": { "dtype": "string", "kind": "identifier", "nullable": false },
-    "gender": { "dtype": "string", "kind": "categorical", "allowed_values": ["Female", "Male"] },
-    "SeniorCitizen": { "dtype": "int", "kind": "categorical", "allowed_values": [0, 1] },
-    "Partner": { "dtype": "string", "kind": "categorical", "allowed_values": ["No", "Yes"] },
-    "Dependents": { "dtype": "string", "kind": "categorical", "allowed_values": ["No", "Yes"] },
-    "tenure": { "dtype": "int", "kind": "numeric", "min": 1, "max": 72, "unit": "months" },
-    "PhoneService": { "dtype": "string", "kind": "categorical", "allowed_values": ["No", "Yes"] },
-    "MultipleLines": { "dtype": "string", "kind": "categorical", "allowed_values": ["No", "No phone service", "Yes"] },
-    "InternetService": { "dtype": "string", "kind": "categorical", "allowed_values": ["DSL", "Fiber optic", "No"] },
-    "OnlineSecurity": { "dtype": "string", "kind": "categorical", "allowed_values": ["No", "No internet service", "Yes"] },
-    "OnlineBackup": { "dtype": "string", "kind": "categorical", "allowed_values": ["No", "No internet service", "Yes"] },
-    "DeviceProtection": { "dtype": "string", "kind": "categorical", "allowed_values": ["No", "No internet service", "Yes"] },
-    "TechSupport": { "dtype": "string", "kind": "categorical", "allowed_values": ["No", "No internet service", "Yes"] },
-    "StreamingTV": { "dtype": "string", "kind": "categorical", "allowed_values": ["No", "No internet service", "Yes"] },
-    "StreamingMovies": { "dtype": "string", "kind": "categorical", "allowed_values": ["No", "No internet service", "Yes"] },
-    "Contract": { "dtype": "string", "kind": "categorical", "allowed_values": ["Month-to-month", "One year", "Two year"] },
-    "PaperlessBilling": { "dtype": "string", "kind": "categorical", "allowed_values": ["No", "Yes"] },
+    "customerID": {
+      "dtype": "string",
+      "kind": "identifier",
+      "nullable": false
+    },
+    "gender": {
+      "dtype": "string",
+      "kind": "categorical",
+      "allowed_values": [
+        "Female",
+        "Male"
+      ],
+      "nullable": false
+    },
+    "SeniorCitizen": {
+      "dtype": "int",
+      "kind": "categorical",
+      "allowed_values": [
+        0,
+        1
+      ],
+      "nullable": false
+    },
+    "Partner": {
+      "dtype": "string",
+      "kind": "categorical",
+      "allowed_values": [
+        "No",
+        "Yes"
+      ],
+      "nullable": false
+    },
+    "Dependents": {
+      "dtype": "string",
+      "kind": "categorical",
+      "allowed_values": [
+        "No",
+        "Yes"
+      ],
+      "nullable": false
+    },
+    "tenure": {
+      "dtype": "int",
+      "kind": "numeric",
+      "min": 1,
+      "max": 72,
+      "nullable": false,
+      "unit": "months"
+    },
+    "PhoneService": {
+      "dtype": "string",
+      "kind": "categorical",
+      "allowed_values": [
+        "No",
+        "Yes"
+      ],
+      "nullable": false
+    },
+    "MultipleLines": {
+      "dtype": "string",
+      "kind": "categorical",
+      "allowed_values": [
+        "No",
+        "No phone service",
+        "Yes"
+      ],
+      "nullable": false
+    },
+    "InternetService": {
+      "dtype": "string",
+      "kind": "categorical",
+      "allowed_values": [
+        "DSL",
+        "Fiber optic",
+        "No"
+      ],
+      "nullable": false
+    },
+    "OnlineSecurity": {
+      "dtype": "string",
+      "kind": "categorical",
+      "allowed_values": [
+        "No",
+        "No internet service",
+        "Yes"
+      ],
+      "nullable": false
+    },
+    "OnlineBackup": {
+      "dtype": "string",
+      "kind": "categorical",
+      "allowed_values": [
+        "No",
+        "No internet service",
+        "Yes"
+      ],
+      "nullable": false
+    },
+    "DeviceProtection": {
+      "dtype": "string",
+      "kind": "categorical",
+      "allowed_values": [
+        "No",
+        "No internet service",
+        "Yes"
+      ],
+      "nullable": false
+    },
+    "TechSupport": {
+      "dtype": "string",
+      "kind": "categorical",
+      "allowed_values": [
+        "No",
+        "No internet service",
+        "Yes"
+      ],
+      "nullable": false
+    },
+    "StreamingTV": {
+      "dtype": "string",
+      "kind": "categorical",
+      "allowed_values": [
+        "No",
+        "No internet service",
+        "Yes"
+      ],
+      "nullable": false
+    },
+    "StreamingMovies": {
+      "dtype": "string",
+      "kind": "categorical",
+      "allowed_values": [
+        "No",
+        "No internet service",
+        "Yes"
+      ],
+      "nullable": false
+    },
+    "Contract": {
+      "dtype": "string",
+      "kind": "categorical",
+      "allowed_values": [
+        "Month-to-month",
+        "One year",
+        "Two year"
+      ],
+      "nullable": false
+    },
+    "PaperlessBilling": {
+      "dtype": "string",
+      "kind": "categorical",
+      "allowed_values": [
+        "No",
+        "Yes"
+      ],
+      "nullable": false
+    },
     "PaymentMethod": {
       "dtype": "string",
       "kind": "categorical",
@@ -34,16 +174,35 @@
         "Credit card (automatic)",
         "Electronic check",
         "Mailed check"
-      ]
+      ],
+      "nullable": false
     },
     "MonthlyCharges": {
-      "dtype": "float", "kind": "numeric", "monetary": true, "unit": "USD",
-      "min": 18.25, "max": 118.75
+      "dtype": "float",
+      "kind": "numeric",
+      "min": 18.25,
+      "max": 118.75,
+      "nullable": false,
+      "monetary": true,
+      "unit": "USD"
     },
     "TotalCharges": {
-      "dtype": "float", "kind": "numeric", "monetary": true, "unit": "USD",
-      "min": 18.8, "max": 8684.8
+      "dtype": "float",
+      "kind": "numeric",
+      "min": 18.8,
+      "max": 8684.8,
+      "nullable": false,
+      "monetary": true,
+      "unit": "USD"
     },
-    "Churn": { "dtype": "string", "kind": "categorical", "allowed_values": ["No", "Yes"] }
+    "Churn": {
+      "dtype": "string",
+      "kind": "categorical",
+      "allowed_values": [
+        "No",
+        "Yes"
+      ],
+      "nullable": false
+    }
   }
 }
