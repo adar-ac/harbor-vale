@@ -40,6 +40,7 @@ Set `ANALYST_STUB=1` for the tiny hardcoded sample and a placeholder model repor
 | `validation/contract_check.py` | `validate(data_path, contract_path)` returns all violations; `gate()` raises |
 | `validation/exceptions.py` | `Violation`, `ContractViolation` |
 | `tests/test_gate.py` | Clean data passes; `MonthlyCharges` × 100 (cents) is blocked |
+| `tests/test_crew2_contract_violation.py` | Crew 2 ContractViolation test: the real flow stops at the gate when `clean.csv` lacks a contracted column; Crew 2 never runs |
 | `tests/test_analyst_tools.py` | Real cleaning + contract on `telco.csv` (7032 rows) passes the gate |
 | `tests/test_scientist_tools.py` | Features follow the contract; model.pkl loads and reproduces valid, reproducible metrics |
 | `tests/test_metrics_table.py` | The code-rendered metrics table replaces any echo of `{{METRICS_TABLE}}`; a leftover placeholder raises |
