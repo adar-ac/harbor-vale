@@ -45,6 +45,14 @@ log = logging.getLogger("pipeline")
 class ChurnPipelineFlow(Flow):
     @start()
     def run_analyst(self) -> dict[str, Path]:
+        if os.getenv("REUSE_CREW1") == "1":
+            # Skip Crew 1 and gate the files already on disk (e.g. after a hand edit).
+            artifacts = {"data": CREW1_DIR / "clean.csv", "contract": CREW1_DIR / "dataset_contract.json"}
+            missing = [p.name for p in artifacts.values() if not p.exists()]
+            if missing:
+                raise FileNotFoundError(f"REUSE_CREW1=1 but {missing} not in {CREW1_DIR}; run the flow once first")
+            log.info("step 1/3: REUSE_CREW1=1, skipping analyst; using existing files in %s", CREW1_DIR)
+            return artifacts
         log.info("step 1/3: analyst (%s) -> %s", analyst.__name__, CREW1_DIR)
         artifacts = analyst.run(CREW1_DIR)
         log.info("analyst wrote %s and %s", artifacts["data"].name, artifacts["contract"].name)
