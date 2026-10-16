@@ -21,14 +21,17 @@ load_dotenv()
 
 from crewai.flow.flow import Flow, listen, start  # noqa: E402
 
-# ANALYST_DRYRUN=1: real tools + artifacts, no LLM. ANALYST_STUB=1: tiny hardcoded sample.
+# ANALYST_DRYRUN=1: both crews' real tools + artifacts, no LLM.
+# ANALYST_STUB=1: tiny hardcoded sample and a placeholder model report.
 if os.getenv("ANALYST_DRYRUN") == "1":
     from crews.analyst import dryrun as analyst
+    from crews.scientist import dryrun as scientist
 elif os.getenv("ANALYST_STUB") == "1":
     from crews.analyst import stub as analyst
+    from crews.scientist import stub as scientist
 else:
     from crews.analyst import crew as analyst
-from crews.scientist import stub as scientist  # noqa: E402
+    from crews.scientist import crew as scientist
 from validation.contract_check import validate
 from validation.exceptions import ContractViolation
 
@@ -59,11 +62,12 @@ class ChurnPipelineFlow(Flow):
         return artifacts
 
     @listen(contract_gate)
-    def run_scientist(self, artifacts: dict[str, Path]) -> Path:
-        log.info("step 3/3: scientist stub -> %s", CREW2_DIR)
-        report = scientist.run(artifacts["data"], artifacts["contract"], CREW2_DIR)
-        log.info("scientist wrote %s", report.name)
-        return report
+    def run_scientist(self, artifacts: dict[str, Path]) -> dict[str, Path]:
+        log.info("step 3/3: scientist (%s) -> %s", scientist.__name__, CREW2_DIR)
+        # Crew 2 gets only the handoff: clean.csv + dataset_contract.json.
+        outputs = scientist.run(artifacts["data"], artifacts["contract"], CREW2_DIR)
+        log.info("scientist wrote %s", ", ".join(p.name for p in outputs.values()))
+        return outputs
 
 
 def main() -> None:

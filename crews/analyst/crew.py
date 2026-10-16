@@ -17,7 +17,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-load_dotenv()  # GEMINI_API_KEY, CREWAI_TRACING_ENABLED, ... before crewai reads them
+load_dotenv()  # OPENAI_API_KEY, CREWAI_TRACING_ENABLED, ... before crewai reads them
 
 from crewai import LLM, Agent, Crew, Process, Task  # noqa: E402
 from crewai.llms.retry import run_with_rate_limit_retry  # noqa: E402
@@ -29,9 +29,9 @@ ROOT = Path(__file__).resolve().parents[2]
 RAW_PATH = ROOT / "data" / "raw" / "telco.csv"
 INSIGHTS_FILENAME = "insights.md"
 EDA_FILENAME = "eda_report.html"
-# "gemini/..." routes to CrewAI's native Gemini provider (google-genai SDK), which reads
-# GEMINI_API_KEY. gemini-3.8-flash: current stable Flash, free tier (checked 2026-10-12).
-MODEL = os.getenv("MODEL", "gemini/gemini-3.8-flash")
+# "openai/..." routes to CrewAI's native OpenAI provider, which reads OPENAI_API_KEY.
+# Fallback: MODEL=gemini/gemini-3.6-flash uses the native Gemini provider (GEMINI_API_KEY).
+MODEL = os.getenv("MODEL", "openai/gpt-4o-mini")
 
 
 def _json(obj) -> str:
@@ -178,7 +178,6 @@ def build_crew(out_dir: Path, raw_path: Path = RAW_PATH) -> tuple[Crew, dict[str
         tasks=list(tasks.values()),
         process=Process.sequential,
         verbose=True,
-        max_rpm=4,
     )
     return crew, tasks
 

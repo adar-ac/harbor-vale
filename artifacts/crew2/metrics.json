@@ -1,0 +1,154 @@
+{
+  "data": {
+    "features_file": "features.csv",
+    "rows_train": 5625,
+    "rows_test": 1407,
+    "n_features": 30,
+    "churn_rate_train": 0.2658,
+    "churn_rate_test": 0.2658
+  },
+  "setup": {
+    "split": "stratified hold-out, test_size=0.2",
+    "random_state": 42,
+    "cv_folds": 5,
+    "selection_metric": "cv_roc_auc_mean",
+    "decision_threshold": 0.5,
+    "positive_class": "Yes (churned) = 1"
+  },
+  "models": {
+    "logistic_regression": {
+      "params": {
+        "class_weight": "balanced",
+        "max_iter": 2000,
+        "random_state": 42,
+        "estimator": "LogisticRegression",
+        "preprocessing": "StandardScaler"
+      },
+      "cv_roc_auc_mean": 0.846,
+      "cv_roc_auc_std": 0.0054,
+      "test": {
+        "precision": 0.4909,
+        "recall": 0.7968,
+        "f1": 0.6075,
+        "roc_auc": 0.835,
+        "accuracy": 0.7264,
+        "confusion_matrix": {
+          "tn": 724,
+          "fp": 309,
+          "fn": 76,
+          "tp": 298
+        }
+      },
+      "top_features": [
+        {
+          "feature": "tenure",
+          "standardised_coefficient": -1.2639
+        },
+        {
+          "feature": "MonthlyCharges",
+          "standardised_coefficient": -0.9287
+        },
+        {
+          "feature": "InternetService_Fiber optic",
+          "standardised_coefficient": 0.7461
+        },
+        {
+          "feature": "Contract_Two year",
+          "standardised_coefficient": -0.6386
+        },
+        {
+          "feature": "TotalCharges",
+          "standardised_coefficient": 0.6233
+        },
+        {
+          "feature": "Contract_One year",
+          "standardised_coefficient": -0.3267
+        },
+        {
+          "feature": "StreamingTV_Yes",
+          "standardised_coefficient": 0.2597
+        },
+        {
+          "feature": "StreamingMovies_Yes",
+          "standardised_coefficient": 0.2529
+        },
+        {
+          "feature": "MultipleLines_Yes",
+          "standardised_coefficient": 0.2028
+        },
+        {
+          "feature": "PaymentMethod_Electronic check",
+          "standardised_coefficient": 0.1937
+        }
+      ]
+    },
+    "random_forest": {
+      "params": {
+        "class_weight": "balanced",
+        "n_estimators": 300,
+        "min_samples_leaf": 5,
+        "random_state": 42,
+        "estimator": "RandomForestClassifier"
+      },
+      "cv_roc_auc_mean": 0.8468,
+      "cv_roc_auc_std": 0.0053,
+      "test": {
+        "precision": 0.5195,
+        "recall": 0.7834,
+        "f1": 0.6247,
+        "roc_auc": 0.8367,
+        "accuracy": 0.7498,
+        "confusion_matrix": {
+          "tn": 762,
+          "fp": 271,
+          "fn": 81,
+          "tp": 293
+        }
+      },
+      "top_features": [
+        {
+          "feature": "tenure",
+          "importance": 0.1837
+        },
+        {
+          "feature": "TotalCharges",
+          "importance": 0.1386
+        },
+        {
+          "feature": "Contract_Two year",
+          "importance": 0.1056
+        },
+        {
+          "feature": "MonthlyCharges",
+          "importance": 0.1
+        },
+        {
+          "feature": "InternetService_Fiber optic",
+          "importance": 0.0683
+        },
+        {
+          "feature": "PaymentMethod_Electronic check",
+          "importance": 0.0562
+        },
+        {
+          "feature": "Contract_One year",
+          "importance": 0.0425
+        },
+        {
+          "feature": "OnlineSecurity_Yes",
+          "importance": 0.0352
+        },
+        {
+          "feature": "TechSupport_Yes",
+          "importance": 0.0247
+        },
+        {
+          "feature": "DeviceProtection_No internet service",
+          "importance": 0.0174
+        }
+      ]
+    }
+  },
+  "selected_model": "random_forest",
+  "model_file": "model.pkl"
+}

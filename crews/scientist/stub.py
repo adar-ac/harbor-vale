@@ -1,7 +1,8 @@
 """Crew 2 (scientist) STUB.
 
 Reads ONLY the cleaned file and the contract handed over by Crew 1, and writes a
-placeholder model report. No training, no CrewAI Agents/Tasks, no LLM calls yet.
+placeholder model report. No training, no CrewAI Agents/Tasks, no LLM calls. Used only
+with ANALYST_STUB=1, whose 6-row sample is too small to train on.
 """
 
 from __future__ import annotations
@@ -14,7 +15,7 @@ import pandas as pd
 REPORT_FILENAME = "model_report.json"
 
 
-def run(data_path: Path, contract_path: Path, out_dir: Path) -> Path:
+def run(data_path: Path, contract_path: Path, out_dir: Path) -> dict[str, Path]:
     contract = json.loads(Path(contract_path).read_text(encoding="utf-8"))
     df = pd.read_csv(Path(data_path))
     target = contract["target_column"]
@@ -33,4 +34,4 @@ def run(data_path: Path, contract_path: Path, out_dir: Path) -> Path:
         "metrics": {},
     }
     report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
-    return report_path
+    return {"report": report_path}

@@ -11,12 +11,18 @@ data/raw/telco.csv
  Contract gate (pandas, deterministic; no LLM)  ── fails ──► ContractViolation, Crew 2 never runs
       │ passes
       ▼
- Crew 2: scientist (reads ONLY clean.csv + contract) ──► artifacts/crew2/model_report.json
+ Crew 2: scientist (reads ONLY clean.csv + contract) ──► artifacts/crew2/features.csv
+                                                          artifacts/crew2/model.pkl
+                                                          artifacts/crew2/metrics.json
+                                                          artifacts/crew2/evaluation_report.md
+                                                          artifacts/crew2/model_card.md
 ```
 
-**Status:** Crew 1 is a real CrewAI crew on Gemini (`gemini/gemini-3.8-flash` by default; set `MODEL` to change it).
-Crew 2 is still a stub. Set `ANALYST_DRYRUN=1` to run Crew 1’s deterministic tools on
-`telco.csv` (full artifacts, no LLM). Set `ANALYST_STUB=1` for the tiny hardcoded sample.
+**Status:** Crew 1 is a real CrewAI crew on OpenAI (`openai/gpt-4o-mini` by default; set `MODEL` to change it, e.g. `MODEL=gemini/gemini-3.6-flash` with `GEMINI_API_KEY` as a fallback).
+Crew 2 is a real CrewAI crew on the same model: it trains logistic regression and random
+forest, keeps the one with the higher cross-validated ROC-AUC, and writes a model card.
+Set `ANALYST_DRYRUN=1` to run both crews’ deterministic tools (full artifacts, no LLM).
+Set `ANALYST_STUB=1` for the tiny hardcoded sample and a placeholder model report.
 
 ## Layout
 
@@ -27,11 +33,16 @@ Crew 2 is still a stub. Set `ANALYST_DRYRUN=1` to run Crew 1’s deterministic t
 | `crews/analyst/tools.py` | Deterministic pandas code for profiling, cleaning, the contract, and EDA stats. All contract numbers come from here |
 | `crews/analyst/dryrun.py` | Crew 1 offline path: tools only, no LLM (real cleaned data) |
 | `crews/analyst/stub.py` | Crew 1 offline fallback (hardcoded 6 rows) |
-| `crews/scientist/stub.py` | Crew 2 placeholder: reads the handoff, writes `model_report.json` |
+| `crews/scientist/crew.py` | Crew 2: Feature Engineer, Model Trainer, and Model Card Author agents. They call tools and write `evaluation_report.md` + `model_card.md`; the metrics table in both is rendered by code |
+| `crews/scientist/tools.py` | Deterministic pandas/sklearn code: contract-driven encoding, LR vs RF training (`random_state=42`), precision/recall/F1/ROC-AUC, `metrics.json`. All model numbers come from here |
+| `crews/scientist/dryrun.py` | Crew 2 offline path: tools only, no LLM |
+| `crews/scientist/stub.py` | Crew 2 placeholder for `ANALYST_STUB=1`: writes `model_report.json` |
 | `validation/contract_check.py` | `validate(data_path, contract_path)` returns all violations; `gate()` raises |
 | `validation/exceptions.py` | `Violation`, `ContractViolation` |
 | `tests/test_gate.py` | Clean data passes; `MonthlyCharges` × 100 (cents) is blocked |
 | `tests/test_analyst_tools.py` | Real cleaning + contract on `telco.csv` (7032 rows) passes the gate |
+| `tests/test_scientist_tools.py` | Features follow the contract; model.pkl loads and reproduces valid, reproducible metrics |
+| `tests/test_metrics_table.py` | The code-rendered metrics table replaces any echo of `{{METRICS_TABLE}}`; a leftover placeholder raises |
 
 ## Setup (Windows, Python 3.12)
 
@@ -40,8 +51,8 @@ crewai 1.15.23 requires Python `>=3.10,<3.14`. It will not install on 3.14.
 ```powershell
 py -3.12 -m venv .venv
 .venv\Scripts\Activate.ps1
-pip install -r requirements.txt   # includes crewai[google-genai] for the native Gemini provider
-copy .env.example .env            # then set GEMINI_API_KEY
+pip install -r requirements.txt   # includes openai, plus crewai[google-genai] for the Gemini fallback
+copy .env.example .env            # then set OPENAI_API_KEY
 ```
 
 ## Verify
@@ -49,8 +60,9 @@ copy .env.example .env            # then set GEMINI_API_KEY
 Run from the project root:
 
 ```powershell
-python -m pytest -v           # 2 tests: gate passes / gate blocks cents
-python -m flows.main_flow     # end-to-end: writes artifacts/crew1/* and artifacts/crew2/model_report.json
+python -m pytest -v           # gate, analyst tools, scientist tools (tool tests skip without data/raw/telco.csv)
+python -m flows.main_flow     # end-to-end: writes artifacts/crew1/* and artifacts/crew2/*
+$env:ANALYST_DRYRUN = "1"; python -m flows.main_flow   # same, no LLM calls
 ```
 
 Use `python -m ...`, not `pytest` or `python flows\main_flow.py`. The `-m` form
