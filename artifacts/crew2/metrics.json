@@ -150,5 +150,11 @@
     }
   },
   "selected_model": "random_forest",
+  "selection": {
+    "runner_up": "logistic_regression",
+    "margin": 0.0008,
+    "near_tie_threshold": 0.01,
+    "near_tie": true
+  },
   "model_file": "model.pkl"
 }

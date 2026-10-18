@@ -71,6 +71,14 @@ def build_crew(data_path: Path, contract_path: Path, out_dir: Path) -> tuple[Cre
         f"Do not type a metrics table. Put the line {T.METRICS_TABLE_PLACEHOLDER} on its "
         "own where the metrics table belongs; code replaces it with the table from metrics.json."
     )
+    selection_rule = (
+        "When you state why the model was selected, quote both models' mean CV ROC-AUC and "
+        "the margin from metrics.json selection.margin (do not compute it yourself). If "
+        "selection.near_tie is true, call it a near tie: say the two models are effectively "
+        "equal on the selection metric and that the choice could reasonably be made on other "
+        "grounds, such as interpretability (logistic regression coefficients are easier to "
+        "explain than a random forest). Do not describe a near tie as a clear win."
+    )
 
     engineer = Agent(
         role="Feature Engineer",
@@ -132,7 +140,7 @@ def build_crew(data_path: Path, contract_path: Path, out_dir: Path) -> tuple[Cre
             "the metrics table, a discussion of precision vs recall and what the confusion "
             "matrices mean for churn outreach, why accuracy alone is misleading at this churn "
             "rate, how large the gap between the models is, the most important features of "
-            "each, and which model was selected and why. " + table_rule
+            "each, and which model was selected and why. " + selection_rule + " " + table_rule
         ),
         expected_output="A Markdown document with headings. Output only the Markdown.",
         agent=trainer,
@@ -146,7 +154,8 @@ def build_crew(data_path: Path, contract_path: Path, out_dir: Path) -> tuple[Cre
             "static snapshot, the fixed 0.5 threshold, the tenure-0 customers removed during "
             "cleaning, and correlated features. Ethical considerations should cover the "
             "sensitive attributes among the features (e.g. gender, SeniorCitizen) and how "
-            "scores should and should not be used. " + table_rule
+            "scores should and should not be used. Model details must say why this model was "
+            "selected. " + selection_rule + " " + table_rule
         ),
         expected_output="A Markdown document with headings. Output only the Markdown.",
         agent=author,

@@ -64,6 +64,10 @@ def test_model_and_metrics_are_valid(trained):
 
     best = max(metrics["models"], key=lambda n: metrics["models"][n]["cv_roc_auc_mean"])
     assert metrics["selected_model"] == best
+    sel, cv = metrics["selection"], {n: r["cv_roc_auc_mean"] for n, r in metrics["models"].items()}
+    assert sel["runner_up"] != best
+    assert sel["margin"] == pytest.approx(cv[best] - cv[sel["runner_up"]], abs=1e-4)
+    assert sel["near_tie"] == (sel["margin"] < T.NEAR_TIE_MARGIN)
     assert json.loads(paths["metrics"].read_text(encoding="utf-8")) == metrics
 
     model = joblib.load(paths["model"])

@@ -14,6 +14,17 @@ EVAL_FILENAME = "evaluation_report.md"
 CARD_FILENAME = "model_card.md"
 
 
+def _selection_note(metrics: dict) -> str:
+    sel, key = metrics["selection"], metrics["setup"]["selection_metric"]
+    best, other = metrics["selected_model"], sel["runner_up"]
+    note = (f"{key}: `{best}` {metrics['models'][best][key]} vs `{other}` "
+            f"{metrics['models'][other][key]} (margin {sel['margin']})")
+    if sel["near_tie"]:
+        note += (f"; a near tie (under {sel['near_tie_threshold']}), so the choice could "
+                 "reasonably be made on other grounds such as interpretability")
+    return note
+
+
 def _render_evaluation(metrics: dict) -> str:
     setup, data = metrics["setup"], metrics["data"]
     selected = metrics["selected_model"]
@@ -35,6 +46,7 @@ def _render_evaluation(metrics: dict) -> str:
         "",
         "## Selected model",
         f"- `{selected}`, saved as `{metrics['model_file']}`",
+        f"- {_selection_note(metrics)}",
         "",
     ]
     return T.fill_metrics_table("\n".join(lines), metrics)
@@ -54,6 +66,7 @@ def _render_card(metrics: dict, summary: dict) -> str:
         "",
         "## Model",
         f"- Selected: `{selected}` ({sel['params']['estimator']}), file `{metrics['model_file']}`",
+        f"- Selection: {_selection_note(metrics)}",
         f"- Most influential features: {top}",
         "",
         "## Training data",

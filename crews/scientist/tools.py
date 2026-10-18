@@ -39,6 +39,7 @@ TEST_SIZE = 0.2
 CV_FOLDS = 5
 THRESHOLD = 0.5
 SELECTION_METRIC = "roc_auc"  # chosen on cross-validation of the training split only
+NEAR_TIE_MARGIN = 0.01  # CV gap below this is reported as a near tie, not a clear win
 METRICS_TABLE_PLACEHOLDER = "{{METRICS_TABLE}}"
 # LLMs don't always echo the token verbatim ({METRICS_TABLE}, {{ METRICS_TABLE }},
 # `{{METRICS_TABLE}}`), so match any brace/space/backtick wrapping of the name.
@@ -195,7 +196,10 @@ def train_and_compare(features_path: Path, model_path: Path, metrics_path: Path)
             "top_features": _top_features(model, list(X_train.columns)),
         }
 
-    selected = max(results, key=lambda n: results[n][f"cv_{SELECTION_METRIC}_mean"])
+    key = f"cv_{SELECTION_METRIC}_mean"
+    selected = max(results, key=lambda n: results[n][key])
+    runner_up = max((n for n in results if n != selected), key=lambda n: results[n][key])
+    margin = _r(results[selected][key] - results[runner_up][key])
     model_path = Path(model_path)
     model_path.parent.mkdir(parents=True, exist_ok=True)
     joblib.dump(models[selected], model_path)
@@ -219,6 +223,12 @@ def train_and_compare(features_path: Path, model_path: Path, metrics_path: Path)
         },
         "models": results,
         "selected_model": selected,
+        "selection": {
+            "runner_up": runner_up,
+            "margin": margin,
+            "near_tie_threshold": NEAR_TIE_MARGIN,
+            "near_tie": margin < NEAR_TIE_MARGIN,
+        },
         "model_file": model_path.name,
     }
     Path(metrics_path).write_text(json.dumps(metrics, indent=2), encoding="utf-8")
