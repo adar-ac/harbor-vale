@@ -1,5 +1,7 @@
 # Telco churn: two agent crews with a contract gate
 
+Live app: https://harbor-vale-adarac.streamlit.app
+
 Two CrewAI crews predict customer churn on the IBM Telco dataset. A data contract between them is checked by code before the second crew runs.
 
 ```
