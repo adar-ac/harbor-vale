@@ -3,6 +3,4 @@ __pycache__/
 *.pyc
 .env
 data/raw/
-artifacts/**/*.csv
-artifacts/**/*.pkl
 .DS_Store
