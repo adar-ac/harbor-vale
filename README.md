@@ -2,6 +2,23 @@
 
 Live app: https://harbor-vale-adarac.streamlit.app
 
+## The problem
+
+Harbor & Vale is a retail-tech company with two data teams who hand files to
+each other over Slack. One quarter the analysts re-cleaned the customer
+dataset and changed a charges column from cents to dollars — a reasonable
+change, told to nobody. The scientists' churn model retrained that Monday
+from whatever file was in the shared folder, picked up the new data, and
+trained without a single error. For five weeks it ranked every high-value
+customer as safe and every low-value one as at risk, and the retention team
+spent its discount budget on exactly the wrong people.
+
+Nothing crashed. Both teams did their jobs correctly. What was missing was
+anything between them: an agreement about what the data should look like,
+and something that stops the pipeline when it doesn't.
+
+This project is that missing piece.
+
 Two CrewAI crews predict customer churn on the IBM Telco dataset. A data contract between them is checked by code before the second crew runs.
 
 ```
@@ -152,7 +169,7 @@ You can try other breaks the same way: drop a column (`df = df.drop(columns='ten
 
 ## Artifacts
 
-`*.csv` and `*.pkl` under `artifacts/` are gitignored; generate them by running the flow.
+Artifacts from a full run are committed so the deployed app can display them. Running the flow regenerates them in place.
 
 | File | Written by | Contents |
 |---|---|---|

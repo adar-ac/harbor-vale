@@ -4,7 +4,7 @@ print(df.shape)
 print(df.dtypes)
 print(df["TotalCharges"].describe())
 print(df["Churn"].value_counts())
-print("--------------------------------")
+print("-------------------------   -------")
 blanks = df[pd.to_numeric(df["TotalCharges"], errors="coerce").isna()]
 print(len(blanks))
 print(blanks[["customerID", "tenure", "MonthlyCharges", "TotalCharges"]])
