@@ -211,6 +211,5 @@ tests/
   test_metrics_table.py        Metrics table placeholder is always filled
 data/raw/telco.csv             Kaggle input (gitignored, you provide it)
 artifacts/crew1/, crew2/       Pipeline outputs
-scratch_*.py, scratch_facts.json  One-off exploration used to design the cleaning; not used by the pipeline
 .env.example                   Template for .env
 ```
